@@ -10,30 +10,55 @@ class PostActionController extends Controller
 {
     public function like(Post $post)
     {
-        $action = PostAction::firstOrCreate([
-            'post_id' => $post->id,
-            'user_id' => auth()->id(),
-            'type' => 'like'
-        ]);
+        $existingLike = PostAction::where('post_id', $post->id)
+            ->where('user_id', auth()->id())
+            ->where('type', 'like')
+            ->first();
+
+        if ($existingLike) {
+            // Unlike - remove the like
+            $existingLike->delete();
+            $liked = false;
+        } else {
+            // Like - create new like
+            PostAction::create([
+                'post_id' => $post->id,
+                'user_id' => auth()->id(),
+                'type' => 'like'
+            ]);
+            $liked = true;
+        }
 
         return response()->json([
-            'likes' => $post->likes()->count()
+            'likes' => $post->likes()->count(),
+            'status' => $liked ? 'liked' : 'unliked'
         ]);
     }
 
     public function comment(Request $request, Post $post)
     {
         $request->validate([
-            'comment' => 'required|min:2'
+            'comment' => 'required|min:2|max:1000'
         ]);
 
-        PostAction::create([
+        $comment = PostAction::create([
             'post_id' => $post->id,
             'user_id' => auth()->id(),
             'type' => 'comment',
             'comment' => $request->comment
         ]);
 
-        return response()->json(['success' => true]);
+        $comment->load('user');
+
+        return response()->json([
+            'success' => true,
+            'comment' => [
+                'id' => $comment->id,
+                'comment' => $comment->comment,
+                'user_name' => $comment->user->name,
+                'created_at' => $comment->created_at->diffForHumans(),
+                'created_at_full' => $comment->created_at->format('M d, Y h:i A')
+            ]
+        ]);
     }
 }

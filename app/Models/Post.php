@@ -12,9 +12,16 @@ class Post extends Model
         'content',
         'image',
         'slug',
-        'created_by'
+        'created_by',
+        'views_count'
     ];
+    
     use SoftDeletes;
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 
     public function likes()
     {
@@ -23,6 +30,20 @@ class Post extends Model
 
     public function comments()
     {
-        return $this->hasMany(PostAction::class)->where('type', 'comment');
+        return $this->hasMany(PostAction::class)->where('type', 'comment')->latest();
+    }
+
+    public function userLiked()
+    {
+        if (!auth()->check()) {
+            return false;
+        }
+        return $this->likes()->where('user_id', auth()->id())->exists();
+    }
+
+    public function incrementViews()
+    {
+        $this->increment('views_count');
+        $this->refresh();
     }
 }

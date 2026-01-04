@@ -4,20 +4,57 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('posts.index', [
-            'posts' => Post::latest()->paginate(9)
-        ]);
-        return view('posts.index');
+        $query = Post::with(['author', 'likes', 'comments.user'])->latest();
+
+        // Filter by user if requested
+        if ($request->has('user') && $request->user) {
+            $query->where('created_by', $request->user);
+        }
+
+        // Filter by date if requested
+        if ($request->has('date') && $request->date) {
+            $now = now();
+            switch ($request->date) {
+                case 'today':
+                    $query->whereDate('created_at', $now->toDateString());
+                    break;
+                case 'week':
+                    $startOfWeek = $now->copy()->startOfWeek();
+                    $endOfWeek = $now->copy()->endOfWeek();
+                    $query->whereBetween('created_at', [
+                        $startOfWeek->toDateTimeString(),
+                        $endOfWeek->toDateTimeString()
+                    ]);
+                    break;
+                case 'month':
+                    $query->whereYear('created_at', $now->year)
+                          ->whereMonth('created_at', $now->month);
+                    break;
+                case 'year':
+                    $query->whereYear('created_at', $now->year);
+                    break;
+            }
+        }
+
+        $posts = $query->paginate(9)->withQueryString();
+
+        return view('posts.index', compact('posts'));
     }
 
     public function show(Post $post)
     {
+        // Increment views
+        $post->incrementViews();
+        
+        // Load relationships
+        $post->load(['author', 'likes.user', 'comments.user']);
+
         return view('posts.show', compact('post'));
     }
 
@@ -52,7 +89,7 @@ class PostController extends Controller
             'content' => $validated['content'],
             'image'   => $validated['image'] ?? null,
             'slug'    => Str::slug($validated['title']),
-            // 'created_by' => auth()->id()
+            'created_by' => auth()->id()
         ]);
 
         return response()->json([
@@ -63,7 +100,8 @@ class PostController extends Controller
 
     public function ajaxList()
     {
-        $posts = Post::latest()
+        $posts = Post::with('author')
+            ->latest()
             ->get()
             ->map(function ($post) {
                 return [
@@ -72,8 +110,9 @@ class PostController extends Controller
                     'image'   => $post->image
                         ? asset('storage/posts/' . $post->image)
                         : 'https://picsum.photos/600/400',
-                    'excerpt' => Str::limit($post->content, 120),
+                    'excerpt' => Str::limit(strip_tags($post->content), 120),
                     'date'    => $post->created_at->format('M d, Y'),
+                    'author'  => $post->author->name ?? 'Admin',
                 ];
             });
 

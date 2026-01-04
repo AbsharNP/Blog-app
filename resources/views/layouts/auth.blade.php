@@ -8,12 +8,17 @@
     @vite('resources/css/app.css')
 
     <script>
-        if (
-            localStorage.theme === 'dark' ||
-            (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-        ) {
-            document.documentElement.classList.add('dark');
-        }
+        (function() {
+            const theme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = theme === 'dark' || (!theme && prefersDark);
+            
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
     </script>
 </head>
 
@@ -29,6 +34,16 @@
                 linear-gradient(to_bottom,#8080800a_1px,transparent_1px)]
             bg-[size:14px_24px]">
         </div>
+    </div>
+
+    <!-- Dark Mode Toggle -->
+    <div class="absolute top-4 right-4">
+        <button onclick="toggleTheme()"
+                id="theme-toggle"
+                class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                aria-label="Toggle theme">
+            <span id="theme-icon">🌙</span>
+        </button>
     </div>
 
     <!-- MAIN CONTENT -->
@@ -95,5 +110,50 @@
     </footer>
 
     @stack('scripts')
+    
+    <script>
+    // Use global toggleTheme if available, otherwise define it
+    if (typeof window.toggleTheme === 'undefined') {
+        window.toggleTheme = function() {
+            const html = document.documentElement;
+            const isDark = html.classList.contains('dark');
+            const icons = document.querySelectorAll('#theme-icon');
+            
+            if (isDark) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                icons.forEach(icon => {
+                    if (icon) icon.textContent = '🌙';
+                });
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                icons.forEach(icon => {
+                    if (icon) icon.textContent = '☀️';
+                });
+            }
+        };
+    }
+
+    // Set initial theme and icon
+    (function() {
+        const theme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const isDark = theme === 'dark' || (!theme && prefersDark);
+        const icons = document.querySelectorAll('#theme-icon');
+        
+        if (isDark) {
+            document.documentElement.classList.add('dark');
+            icons.forEach(icon => {
+                if (icon) icon.textContent = '☀️';
+            });
+        } else {
+            document.documentElement.classList.remove('dark');
+            icons.forEach(icon => {
+                if (icon) icon.textContent = '🌙';
+            });
+        }
+    })();
+    </script>
 </body>
 </html>

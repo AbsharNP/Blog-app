@@ -16,21 +16,102 @@
             sm:items-center sm:justify-between
             gap-4 mb-6">
 
-    <h1 class="text-xl sm:text-2xl font-semibold">
+    <h1 class="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
         Latest Posts
     </h1>
 
-    <a href="javascript:void(0)"
-       id="openPostModal"
-       class="inline-flex items-center justify-center gap-2
-              rounded-lg bg-indigo-600
-              px-4 py-2.5 text-sm font-medium text-white
-              hover:bg-indigo-700 transition
-              focus:outline-none focus:ring-2 focus:ring-indigo-500
-              w-full sm:w-auto">
-        <x-heroicon-o-plus class="w-5 h-5" />
-        Add Post
-    </a>
+    <div class="flex flex-col sm:flex-row gap-3">
+        @auth
+        <a href="{{ route('profile.my-posts') }}"
+           class="inline-flex items-center justify-center gap-2
+                  rounded-lg bg-gray-100 dark:bg-gray-800
+                  px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300
+                  hover:bg-gray-200 dark:hover:bg-gray-700 transition
+                  w-full sm:w-auto">
+            My Posts
+        </a>
+        @endauth
+        
+        <a href="javascript:void(0)"
+           id="openPostModal"
+           class="inline-flex items-center justify-center gap-2
+                  rounded-lg bg-indigo-600
+                  px-4 py-2.5 text-sm font-medium text-white
+                  hover:bg-indigo-700 transition
+                  focus:outline-none focus:ring-2 focus:ring-indigo-500
+                  w-full sm:w-auto">
+            <x-heroicon-o-plus class="w-5 h-5" />
+            Add Post
+        </a>
+    </div>
+</div>
+
+<!-- Filters Dropdown -->
+<div class="mb-6">
+    <div class="relative inline-block">
+        <button id="filter-toggle"
+                class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+            </svg>
+            Filters
+            @if(request('user') || request('date'))
+                <span class="ml-1 px-2 py-0.5 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-xs">
+                    {{ (request('user') ? 1 : 0) + (request('date') ? 1 : 0) }}
+                </span>
+            @endif
+        </button>
+
+        <div id="filter-dropdown"
+             class="hidden absolute right-0 mt-2 w-64 sm:w-80 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 p-4">
+            <form method="GET" action="{{ route('posts.index') }}" id="filter-form">
+                <!-- Author Filter -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Filter by Author
+                    </label>
+                    <select name="user" 
+                            class="w-full rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">All Authors</option>
+                        @foreach(\App\Models\User::has('posts')->get() as $user)
+                            <option value="{{ $user->id }}" {{ request('user') == $user->id ? 'selected' : '' }}>
+                                {{ $user->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Date Filter -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Filter by Date
+                    </label>
+                    <select name="date" 
+                            class="w-full rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">All Dates</option>
+                        <option value="today" {{ request('date') == 'today' ? 'selected' : '' }}>Today</option>
+                        <option value="week" {{ request('date') == 'week' ? 'selected' : '' }}>This Week</option>
+                        <option value="month" {{ request('date') == 'month' ? 'selected' : '' }}>This Month</option>
+                        <option value="year" {{ request('date') == 'year' ? 'selected' : '' }}>This Year</option>
+                    </select>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-2">
+                    <button type="submit" 
+                            class="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm font-medium">
+                        Apply Filters
+                    </button>
+                    @if(request('user') || request('date'))
+                    <a href="{{ route('posts.index') }}" 
+                       class="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition text-sm font-medium">
+                        Clear
+                    </a>
+                    @endif
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <!-- Posts List -->
@@ -67,17 +148,34 @@
                 </h2>
 
                 <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
-                    {{ $post->excerpt }}
+                    {{ \Illuminate\Support\Str::limit(strip_tags($post->content), 150) }}
                 </p>
 
-                <div class="flex items-center justify-between
-                            text-xs sm:text-sm text-gray-500">
-                    <span>
-                        {{ $post->created_at->format('M d, Y') }}
-                    </span>
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                        <span>
+                            By <a href="{{ route('profile.show', $post->author ?? 1) }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline">
+                                {{ $post->author->name ?? 'Admin' }}
+                            </a>
+                        </span>
+                        <span>•</span>
+                        <span>{{ $post->created_at->format('M d, Y') }}</span>
+                        <span>•</span>
+                        <span class="flex items-center gap-1">
+                            👁️ {{ $post->views_count ?? 0 }}
+                        </span>
+                        <span>•</span>
+                        <span class="flex items-center gap-1">
+                            ❤️ {{ $post->likes->count() ?? 0 }}
+                        </span>
+                        <span>•</span>
+                        <span class="flex items-center gap-1">
+                            💬 {{ $post->comments->count() ?? 0 }}
+                        </span>
+                    </div>
 
                     <a href="{{ route('posts.show', $post) }}"
-                       class="text-indigo-600 hover:underline">
+                       class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
                         Read more →
                     </a>
                 </div>
@@ -180,36 +278,46 @@
 
             <!-- Title -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label for="post-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Title
                 </label>
                 <input type="text"
+                       id="post-title"
                        name="title"
                        required
+                       minlength="3"
+                       maxlength="255"
                        placeholder="Enter post title"
                        class="mt-1 w-full rounded-lg
                               px-3 sm:px-4 py-2.5 sm:py-3
                               text-sm sm:text-base
-                              border-gray-300 dark:border-gray-700
+                              border border-gray-300 dark:border-gray-700
                               dark:bg-gray-800 dark:text-white
-                              focus:ring-indigo-500 focus:border-indigo-500">
+                              focus:ring-indigo-500 focus:border-indigo-500 transition
+                              error:border-red-500">
+                <span id="title-error" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden block"></span>
             </div>
 
             <!-- Content -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label for="post-content" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Content
                 </label>
-                <textarea name="content"
+                <textarea id="post-content"
+                          name="content"
                           rows="4"
                           required
+                          minlength="10"
+                          maxlength="5000"
                           placeholder="Write your post content..."
                           class="mt-1 w-full rounded-lg
                                  px-3 sm:px-4 py-2.5 sm:py-3
                                  text-sm sm:text-base
-                                 border-gray-300 dark:border-gray-700
+                                 border border-gray-300 dark:border-gray-700
                                  dark:bg-gray-800 dark:text-white
-                                 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                                 focus:ring-indigo-500 focus:border-indigo-500 transition
+                                 error:border-red-500 resize-none"></textarea>
+                <span id="content-error" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden block"></span>
             </div>
 
             <!-- Image Upload -->
@@ -256,6 +364,7 @@
                            class="hidden"
                            onchange="previewImage(event)">
                 </label>
+                <span id="image-error" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden block"></span>
             </div>
 
             <!-- Footer -->
@@ -292,6 +401,26 @@
 @push('scripts')
     <script>
         window.isAuthenticated = @json(auth()->check());
+
+        // Filter dropdown toggle
+        $(document).ready(function() {
+            $('#filter-toggle').on('click', function(e) {
+                e.stopPropagation();
+                $('#filter-dropdown').toggleClass('hidden');
+            });
+
+            // Close dropdown when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#filter-toggle, #filter-dropdown').length) {
+                    $('#filter-dropdown').addClass('hidden');
+                }
+            });
+
+            // Prevent dropdown from closing when clicking inside
+            $('#filter-dropdown').on('click', function(e) {
+                e.stopPropagation();
+            });
+        });
         // console.log('Posts page loaded');
 
         // function confirmDelete() {
@@ -347,42 +476,113 @@
                     .addClass('hidden');
             });
             $('#postForm').on('submit', function(e) {
-    e.preventDefault();
+                e.preventDefault();
 
-    let formData = new FormData(this);
+                const form = $(this);
+                const formData = new FormData(this);
+                const submitBtn = form.find('button[type="submit"]');
 
-    $.ajax({
-        url: $(this).attr('action'),
-        method: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-    if (response.status === 'success') {
-        $('#successAlert')
-            .text(response.message)
-            .slideDown()
-            .delay(2000)
-            .slideUp();
+                // Clear previous errors
+                $('[id$="-error"]').addClass('hidden').text('');
+                form.find('input, textarea').removeClass('border-red-500');
 
-        // Close modal
-        $('#post_model_add')
-            .removeClass('flex')
-            .addClass('hidden');
+                // Frontend validation
+                let isValid = true;
+                const title = $('#post-title').val().trim();
+                const content = $('#post-content').val().trim();
 
-        // Reset form
-        $('#postForm')[0].reset();
-        $('#imagePreview').addClass('hidden');
-        $('#imagePlaceholder').removeClass('hidden');
+                if (!title) {
+                    $('#title-error').removeClass('hidden').text('Title is required');
+                    $('#post-title').addClass('border-red-500');
+                    isValid = false;
+                } else if (title.length < 3) {
+                    $('#title-error').removeClass('hidden').text('Title must be at least 3 characters');
+                    $('#post-title').addClass('border-red-500');
+                    isValid = false;
+                } else if (title.length > 255) {
+                    $('#title-error').removeClass('hidden').text('Title must not exceed 255 characters');
+                    $('#post-title').addClass('border-red-500');
+                    isValid = false;
+                }
 
-        location.reload();
-    }
-},
-        error: function(xhr) {
-            alert('Something went wrong');
-        }
-    });
-});
+                if (!content) {
+                    $('#content-error').removeClass('hidden').text('Content is required');
+                    $('#post-content').addClass('border-red-500');
+                    isValid = false;
+                } else if (content.length < 10) {
+                    $('#content-error').removeClass('hidden').text('Content must be at least 10 characters');
+                    $('#post-content').addClass('border-red-500');
+                    isValid = false;
+                } else if (content.length > 5000) {
+                    $('#content-error').removeClass('hidden').text('Content must not exceed 5000 characters');
+                    $('#post-content').addClass('border-red-500');
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    return;
+                }
+
+                submitBtn.prop('disabled', true).text('Saving...');
+
+                $.ajax({
+                    url: form.attr('action'),
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            $('#successAlert')
+                                .text(response.message)
+                                .removeClass('hidden')
+                                .slideDown()
+                                .delay(2000)
+                                .slideUp();
+
+                            // Close modal
+                            $('#post_model_add')
+                                .removeClass('flex')
+                                .addClass('hidden');
+
+                            // Reset form
+                            form[0].reset();
+                            $('#imagePreview').addClass('hidden');
+                            $('#imagePlaceholder').removeClass('hidden');
+                            $('[id$="-error"]').addClass('hidden').text('');
+                            form.find('input, textarea').removeClass('border-red-500');
+
+                            location.reload();
+                        }
+                    },
+                    error: function(xhr) {
+                        submitBtn.prop('disabled', false).text('Save Post');
+
+                        if (xhr.status === 422) {
+                            const errors = xhr.responseJSON.errors || {};
+                            
+                            // Display validation errors
+                            Object.keys(errors).forEach(field => {
+                                const errorSpan = $(`#${field}-error`);
+                                const input = $(`[name="${field}"]`);
+                                if (errorSpan.length) {
+                                    errorSpan.removeClass('hidden').text(errors[field][0]);
+                                    input.addClass('border-red-500');
+                                }
+                            });
+                        } else {
+                            alert('Something went wrong. Please try again.');
+                        }
+                    }
+                });
+            });
+
+            // Clear errors on input
+            $('#postForm').find('input, textarea').on('input', function() {
+                const fieldName = $(this).attr('name');
+                $(`#${fieldName}-error`).addClass('hidden').text('');
+                $(this).removeClass('border-red-500');
+            });
 
         });
     </script>

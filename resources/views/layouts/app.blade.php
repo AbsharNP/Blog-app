@@ -14,13 +14,17 @@
     @vite('resources/css/app.css')
 
     <script>
-        if (
-            localStorage.theme === 'dark' ||
-            (!('theme' in localStorage) &&
-             window.matchMedia('(prefers-color-scheme: dark)').matches)
-        ) {
-            document.documentElement.classList.add('dark');
-        }
+        (function() {
+            const theme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = theme === 'dark' || (!theme && prefersDark);
+            
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
     </script>
 </head>
 
@@ -52,5 +56,28 @@
     </footer>
 
     @stack('scripts')
+    
+    <script>
+    // Logout form AJAX handling
+    $(document).ready(function() {
+        $('#logout-form').on('submit', function(e) {
+            e.preventDefault();
+            const form = $(this);
+            
+            $.ajax({
+                url: form.attr('action'),
+                method: 'POST',
+                data: form.serialize(),
+                success: function() {
+                    window.location.href = '/';
+                },
+                error: function() {
+                    // Fallback to normal form submission
+                    form.off('submit').submit();
+                }
+            });
+        });
+    });
+    </script>
 </body>
 </html>

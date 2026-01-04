@@ -1,59 +1,237 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Blog Application
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modern, feature-rich blog application built with Laravel and Tailwind CSS. This application provides a complete blogging platform with user authentication, post management, comments, likes, and more.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Core Features
+- ✅ **User Authentication** - Secure registration and login system using Laravel's built-in authentication
+- ✅ **Post Management** - Create, read, and manage blog posts with images
+- ✅ **View Count** - Track how many times each post has been viewed
+- ✅ **Like System** - Users can like/unlike posts
+- ✅ **Comments** - Users can comment on posts with real-time updates
+- ✅ **User Profiles** - View user profiles with post statistics
+- ✅ **Author Filtering** - Filter posts by specific authors
+- ✅ **Dark Mode** - Toggle between light and dark themes
+- ✅ **Responsive Design** - Fully responsive design that works on all devices
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Additional Features
+- User profile pages with statistics (total posts, likes, comments, views)
+- "My Posts" page to view all posts by the authenticated user
+- Optimized database queries to prevent N+1 problems
+- Clean and modern UI with Tailwind CSS
+- Smooth transitions and animations
+- Image upload support for blog posts
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Requirements
 
-## Learning Laravel
+- PHP >= 8.2
+- Composer
+- Node.js and npm
+- MySQL/PostgreSQL/SQLite
+- Laravel 12.x
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Installation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd blog-app
+   ```
 
-## Laravel Sponsors
+2. **Install PHP dependencies**
+   ```bash
+   composer install
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+3. **Install Node dependencies**
+   ```bash
+   npm install
+   ```
 
-### Premium Partners
+4. **Environment setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+5. **Configure database**
+   Edit `.env` file and set your database credentials:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=blog_app
+   DB_USERNAME=your_username
+   DB_PASSWORD=your_password
+   ```
 
-## Contributing
+6. **Run migrations**
+   ```bash
+   php artisan migrate
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+7. **Create storage link**
+   ```bash
+   php artisan storage:link
+   ```
 
-## Code of Conduct
+8. **Build assets**
+   ```bash
+   npm run build
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+9. **Start the development server**
+   ```bash
+   php artisan serve
+   ```
 
-## Security Vulnerabilities
+   For development with hot reload:
+   ```bash
+   npm run dev
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+   Visit `http://localhost:8000` in your browser.
+
+## Usage
+
+### Creating an Account
+1. Click on "Register" in the navigation bar
+2. Fill in your name, email, and password
+3. Accept the terms and conditions
+4. Click "Create Account"
+5. You'll be redirected to the login page
+
+### Creating a Post
+1. Log in to your account
+2. Click "Add Post" on the posts page
+3. Fill in the title and content
+4. Optionally upload a featured image
+5. Click "Save Post"
+
+### Viewing Posts
+- Browse all posts on the main posts page
+- Use the author filter to view posts by specific users
+- Click on any post to view full details
+
+### Interacting with Posts
+- **Like**: Click the heart icon to like/unlike a post (requires login)
+- **Comment**: Scroll to the comments section and add your comment (requires login)
+- **View Count**: Each post displays the number of views
+
+### User Profile
+- Click on any author's name to view their profile
+- View their post statistics and all their posts
+- Click "My Posts" in the navigation (when logged in) to see your own posts
+
+### Dark Mode
+- Click the moon/sun icon in the navigation bar to toggle between light and dark themes
+- Your preference is saved in your browser's local storage
+
+## Project Structure
+
+```
+blog-app/
+├── app/
+│   ├── Http/Controllers/
+│   │   ├── Auth/
+│   │   │   └── AuthenticatedSessionController.php
+│   │   ├── PostController.php
+│   │   ├── PostActionController.php
+│   │   └── ProfileController.php
+│   └── Models/
+│       ├── Post.php
+│       ├── PostAction.php
+│       └── User.php
+├── database/
+│   └── migrations/
+├── resources/
+│   ├── views/
+│   │   ├── auth/
+│   │   ├── layouts/
+│   │   ├── posts/
+│   │   ├── profile/
+│   │   └── partials/
+│   └── css/
+├── routes/
+│   └── web.php
+└── public/
+    └── storage/
+```
+
+## Database Schema
+
+### Posts Table
+- `id` - Primary key
+- `title` - Post title
+- `slug` - URL-friendly post identifier
+- `content` - Post content
+- `image` - Featured image filename
+- `created_by` - Foreign key to users table
+- `views_count` - Number of views
+- `timestamps` - Created and updated timestamps
+- `deleted_at` - Soft delete timestamp
+
+### Post Actions Table
+- `id` - Primary key
+- `post_id` - Foreign key to posts table
+- `user_id` - Foreign key to users table
+- `type` - Either 'like' or 'comment'
+- `comment` - Comment text (nullable)
+- `timestamps` - Created and updated timestamps
+
+### Users Table
+- Standard Laravel users table with authentication fields
+
+## Technologies Used
+
+- **Backend**: Laravel 12.x
+- **Frontend**: Tailwind CSS, jQuery
+- **Database**: MySQL/PostgreSQL/SQLite
+- **Authentication**: Laravel's built-in authentication system
+
+## Key Features Implementation
+
+### View Count
+Views are tracked automatically when a user visits a post. The count is incremented using Laravel's `increment()` method for efficiency.
+
+### Like/Unlike System
+The like system uses a toggle mechanism - clicking the like button will like the post if it's not liked, and unlike it if it is already liked. Uses AJAX for smooth user experience.
+
+### Comments
+Comments are added in real-time using AJAX. New comments appear immediately without page refresh. Comments are ordered by latest first.
+
+### Author Filtering
+The posts index page includes a dropdown filter to view posts by specific authors. Uses query parameters to maintain filter state.
+
+### Dark Mode
+Dark mode is implemented using Tailwind CSS's dark mode classes. The preference is stored in localStorage and persists across page reloads.
+
+## Development
+
+### Running Tests
+```bash
+php artisan test
+```
+
+### Code Style
+The project uses Laravel's coding standards. Use Pint for code formatting:
+```bash
+./vendor/bin/pint
+```
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Support
+
+For issues, questions, or contributions, please open an issue on the repository.
+
+## Author
+
+Built with ❤️ using Laravel and Tailwind CSS
