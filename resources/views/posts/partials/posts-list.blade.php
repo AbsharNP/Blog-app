@@ -14,7 +14,7 @@
 
         <div class="p-6">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                <a href="{{ route('posts.show', $post) }}" class="hover:text-indigo-600">
+                <a href="{{ route('posts.show', $post) }}" class="hover:text-sky-600">
                     {{ $post->title }}
                 </a>
             </h2>
@@ -25,7 +25,7 @@
 
             <div class="flex items-center justify-between text-sm text-gray-500">
                 <span>{{ $post->created_at->format('M d, Y') }}</span>
-                <a href="{{ route('posts.show', $post) }}" class="text-indigo-600 hover:underline">
+                <a href="{{ route('posts.show', $post) }}" class="text-sky-600 hover:underline">
                     Read more →
                 </a>
             </div>

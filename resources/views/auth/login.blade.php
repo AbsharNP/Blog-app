@@ -27,7 +27,7 @@
                       px-4 py-3 text-sm sm:text-base
                       border border-gray-300 dark:border-gray-700
                       dark:bg-gray-800 dark:text-white
-                      focus:ring-indigo-500 focus:border-indigo-500 transition
+                      focus:ring-sky-500 focus:border-sky-500 transition
                       error:border-red-500">
         <span id="email-error" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden"></span>
     </div>
@@ -46,7 +46,7 @@
                       px-4 py-3 text-sm sm:text-base
                       border border-gray-300 dark:border-gray-700
                       dark:bg-gray-800 dark:text-white
-                      focus:ring-indigo-500 focus:border-indigo-500 transition
+                      focus:ring-sky-500 focus:border-sky-500 transition
                       error:border-red-500">
         <span id="password-error" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden"></span>
     </div>
@@ -58,7 +58,7 @@
                    name="remember"
                    id="remember"
                    class="rounded border-gray-300
-                          text-indigo-600 focus:ring-indigo-500">
+                          text-sky-600 focus:ring-sky-500">
             <span class="text-gray-600 dark:text-gray-400">
                 Remember me
             </span>
@@ -66,7 +66,7 @@
 
         @if (Route::has('password.request'))
             <a href="{{ route('password.request') }}"
-               class="text-indigo-600 dark:text-indigo-400 hover:underline">
+               class="text-sky-600 dark:text-sky-400 hover:underline">
                 Forgot password?
             </a>
         @endif
@@ -75,10 +75,10 @@
     <!-- Submit -->
     <button type="submit"
             id="submit-btn"
-            class="w-full rounded-lg
-                   bg-indigo-600 hover:bg-indigo-700
-                   text-white font-medium
-                   py-3 transition
+            class="w-full rounded-full bg-brand
+                   text-white font-semibold py-3
+                   shadow-lg shadow-sky-500/30
+                   hover:scale-[1.02] active:scale-[0.98] transition
                    disabled:opacity-50 disabled:cursor-not-allowed">
         Login
     </button>
@@ -89,7 +89,7 @@
 <p>
     Don't have an account?
     <a href="{{ route('register') }}"
-       class="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+       class="text-sky-600 dark:text-sky-400 hover:underline font-medium">
         Register
     </a>
 </p>

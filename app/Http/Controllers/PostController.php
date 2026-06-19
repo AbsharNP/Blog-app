@@ -98,6 +98,52 @@ class PostController extends Controller
         ]);
     }
 
+    public function update(Request $request, Post $post)
+    {
+        abort_if($post->created_by !== auth()->id(), 403);
+
+        $validated = $request->validate([
+            'title'   => 'required|string|max:255|min:3',
+            'content' => 'required|string|max:5000|min:10',
+            'image'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        $imageData = [];
+        if ($request->hasFile('image')) {
+            $image     = $request->file('image');
+            $extension = $image->getClientOriginalExtension();
+            $imageName = Str::slug($validated['title'])
+                       . '-' . time()
+                       . '-' . Str::random(6)
+                       . '.' . $extension;
+            $image->storeAs('posts', $imageName, 'public');
+            $imageData['image'] = $imageName;
+        }
+
+        $post->update(array_merge([
+            'title'   => $validated['title'],
+            'content' => $validated['content'],
+            'slug'    => Str::slug($validated['title']),
+        ], $imageData));
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Post updated successfully!',
+        ]);
+    }
+
+    public function destroy(Post $post)
+    {
+        abort_if($post->created_by !== auth()->id(), 403);
+
+        $post->delete();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Post deleted.',
+        ]);
+    }
+
     public function ajaxList()
     {
         $posts = Post::with('author')

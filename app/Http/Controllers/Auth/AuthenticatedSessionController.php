@@ -40,11 +40,11 @@ class AuthenticatedSessionController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Login successful',
-                'redirect' => route('posts.index')
+                'redirect' => route('dashboard')
             ]);
         }
 
-        return redirect()->intended(route('posts.index'));
+        return redirect()->intended(route('dashboard'));
     }
 
     /**

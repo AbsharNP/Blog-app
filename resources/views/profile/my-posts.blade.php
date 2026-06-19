@@ -20,7 +20,7 @@
                 You haven't posted anything yet.
             </p>
             <a href="{{ route('posts.index') }}"
-               class="inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition">
+               class="inline-flex items-center justify-center gap-2 rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700 transition">
                 Create Your First Post
             </a>
         </div>
@@ -40,7 +40,7 @@
                             <div>
                                 <h3 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2">
                                     <a href="{{ route('posts.show', $post) }}"
-                                       class="hover:text-indigo-600 dark:hover:text-indigo-400">
+                                       class="hover:text-sky-600 dark:hover:text-sky-400">
                                         {{ $post->title }}
                                     </a>
                                 </h3>
@@ -65,7 +65,7 @@
                                 </div>
 
                                 <a href="{{ route('posts.show', $post) }}"
-                                   class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
+                                   class="text-sm text-sky-600 dark:text-sky-400 hover:underline">
                                     Read more →
                                 </a>
                             </div>

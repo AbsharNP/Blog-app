@@ -30,7 +30,7 @@
                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700
                       bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                       placeholder-gray-400 dark:placeholder-gray-500
-                      focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition
+                      focus:ring-2 focus:ring-sky-500 focus:border-transparent transition
                       error:border-red-500">
         <span id="name-error" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden"></span>
     </div>
@@ -49,7 +49,7 @@
                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700
                       bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                       placeholder-gray-400 dark:placeholder-gray-500
-                      focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition
+                      focus:ring-2 focus:ring-sky-500 focus:border-transparent transition
                       error:border-red-500">
         <span id="email-error" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden"></span>
     </div>
@@ -68,7 +68,7 @@
                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700
                       bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                       placeholder-gray-400 dark:placeholder-gray-500
-                      focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition
+                      focus:ring-2 focus:ring-sky-500 focus:border-transparent transition
                       error:border-red-500">
         <span id="password-error" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden"></span>
     </div>
@@ -87,7 +87,7 @@
                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700
                       bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                       placeholder-gray-400 dark:placeholder-gray-500
-                      focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition
+                      focus:ring-2 focus:ring-sky-500 focus:border-transparent transition
                       error:border-red-500">
         <span id="password_confirmation-error" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden"></span>
     </div>
@@ -99,12 +99,12 @@
                    name="terms" 
                    id="terms"
                    required
-                   class="mt-1 w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                   class="mt-1 w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500">
             <label for="terms" class="ml-2 text-sm text-gray-600 dark:text-gray-400">
                 I agree to the 
-                <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:underline">Terms of Service</a>
+                <a href="#" class="text-sky-600 dark:text-sky-400 hover:underline">Terms of Service</a>
                 and 
-                <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:underline">Privacy Policy</a>
+                <a href="#" class="text-sky-600 dark:text-sky-400 hover:underline">Privacy Policy</a>
             </label>
         </div>
         <span id="terms-error" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden block"></span>
@@ -113,12 +113,11 @@
     <!-- Submit Button -->
     <button type="submit"
             id="submit-btn"
-            class="w-full bg-gradient-to-r from-indigo-600 to-purple-600
-                   hover:from-indigo-700 hover:to-purple-700
-                   text-white font-medium py-3 rounded-lg
+            class="w-full bg-brand
+                   text-white font-semibold py-3 rounded-full
                    transition transform hover:scale-[1.02] active:scale-[0.98]
-                   focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
-                   shadow-lg hover:shadow-xl
+                   focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2
+                   shadow-lg shadow-sky-500/30 hover:shadow-xl
                    disabled:opacity-50 disabled:cursor-not-allowed">
         Create Account
     </button>
@@ -128,7 +127,7 @@
 @section('footer-links')
     <p>
         Already have an account?
-        <a href="{{ route('login') }}" class="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition">
+        <a href="{{ route('login') }}" class="font-medium text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 transition">
             Sign in instead
         </a>
     </p>
